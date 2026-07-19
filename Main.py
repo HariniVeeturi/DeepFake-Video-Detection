@@ -58,8 +58,16 @@ train_sample_metadata = pd.read_json(
 ).T
 train_sample_metadata.head()
 
-# TODO: label encoding (FAKE -> 1, REAL -> 0) and the actual
-# train_test_split(...) call (90% train / 10% test) that produces
+# Label encoding: FAKE -> 1, REAL -> 0
+train_sample_metadata["label"] = train_sample_metadata["label"].map({"FAKE": 1, "REAL": 0})
+
+# Train/test split (90% train, 10% test), stratified to preserve label balance
+train_videos, test_videos = train_test_split(
+    train_sample_metadata,
+    test_size=0.1,
+    stratify=train_sample_metadata["label"],
+    random_state=42,
+)
 # train_data, test_data, train_labels, test_labels, test_videos
 # were described in the report but not included as code — add them here.
 
